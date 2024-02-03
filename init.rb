@@ -1,8 +1,10 @@
+require 'redmine'
+$LOAD_PATH.unshift "#{File.dirname(__FILE__)}/lib/"
+require 'restrict_time_entry_patch'
 Redmine::Plugin.register :redmine_timelog_restrict_date do
   name 'Redmine Timelog Restrict Date plugin'
-  author 'Author name'
-  description 'This is a plugin for Redmine'
+  author 'Target Integration'
+  description 'Redmine Timelog Restrict Date plugin'
   version '0.0.1'
-  url 'http://example.com/path/to/plugin'
-  author_url 'http://example.com/about'
+  settings default: {}, partial: 'settings/timelog_restrict_settings.html.erb'
 end
