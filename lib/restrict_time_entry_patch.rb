@@ -10,7 +10,7 @@ module RestrictTimeEntryPatch
   module InstanceMethods
 
     def check_restrict_date
-      if Time.now.to_date > Setting.plugin_redmine_timelog_restrict_date['lock_date'].to_date
+      if self.spent_on.to_date <= Setting.plugin_redmine_timelog_restrict_date['lock_date'].to_date
         errors.add(:base, "You have missed the time log deadline. Please contact your manager.")
         return
       end
