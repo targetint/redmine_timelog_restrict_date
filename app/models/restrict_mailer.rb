@@ -16,7 +16,7 @@ class RestrictMailer < ActionMailer::Base
     @user = user
     @value = value
     @value_was = value_was
-    to = User.where(admin: 1).map(&:mail).flatten.compact.uniq
+    to = User.active.where(admin: 1).map(&:mail).flatten.compact.uniq
     mail :to => to,
       :subject => "Lock Date for Time Log changed by #{user.name}"
   end
