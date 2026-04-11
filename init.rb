@@ -8,5 +8,5 @@ Redmine::Plugin.register :redmine_timelog_restrict_date do
   author_url 'https://www.targetintegration.com'
   description 'Redmine Timelog Restrict Date plugin was created by the team at Target Integration www.targetintegration.com.'
   version '0.0.1'
-  settings default: {}, partial: 'settings/timelog_restrict_settings.html.erb'
+  settings default: {}, partial: 'settings/timelog_restrict_settings'
 end
