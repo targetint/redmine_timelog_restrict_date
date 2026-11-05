@@ -2,6 +2,7 @@ require 'redmine'
 $LOAD_PATH.unshift "#{File.dirname(__FILE__)}/lib/"
 require 'restrict_time_entry_patch'
 require 'restrict_setting_patch'
+require 'restrict_auto_lock'
 Redmine::Plugin.register :redmine_timelog_restrict_date do
   name 'Redmine Timelog Restrict Date plugin'
   author 'Target Integration'

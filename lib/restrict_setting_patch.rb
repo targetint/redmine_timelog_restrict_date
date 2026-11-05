@@ -29,17 +29,18 @@ module RestrictSettingPatch
       was = RestrictSettingPatch.lock_date_from(old_value)
       now = RestrictSettingPatch.lock_date_from(value)
 
-      @lock_date_change = [User.current, now, was] unless now == was
+      changed_by = RestrictAutoLock.changed_by || User.current.name
+      @lock_date_change = [changed_by, now, was] unless now == was
       true
     end
 
     def notify_lock_date_change
       return unless @lock_date_change
 
-      user, now, was = @lock_date_change
+      changed_by, now, was = @lock_date_change
       @lock_date_change = nil
       begin
-        RestrictMailer.deliver_settings_changes(user, now, was).deliver_later
+        RestrictMailer.deliver_settings_changes(changed_by, now, was).deliver_later
       rescue StandardError => e
         # Never let a mail problem break saving the settings
         Rails.logger.error "redmine_timelog_restrict_date: could not send lock date change email: #{e.class}: #{e.message}"

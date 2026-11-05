@@ -1,7 +1,42 @@
 <fieldset>
   <legend>Lock Date for Time Log</legend>
   <p>
-    <label for="lock_date">Lock Date for Time Log</label>
-    <%= date_field_tag 'settings[lock_date]',Setting.plugin_redmine_timelog_restrict_date['lock_date'].to_s %>
+    <label for="settings_lock_date">Lock Date for Time Log</label>
+    <%= date_field_tag 'settings[lock_date]', settings['lock_date'].to_s %>
+  </p>
+</fieldset>
+
+<fieldset>
+  <legend>Automatic Lock Date</legend>
+  <p>
+    <label for="settings_auto_lock_enabled">Move lock date automatically</label>
+    <%= hidden_field_tag 'settings[auto_lock_enabled]', '0', id: nil %>
+    <%= check_box_tag 'settings[auto_lock_enabled]', '1', %w(1 true).include?(settings['auto_lock_enabled'].to_s) %>
+    <em class="info">
+      Every night at midnight the lock date is moved forward to the date below.
+      It is never moved back, so a later lock date is kept. If someone moves the
+      lock date back to let people fix old entries, it is put back the next night.
+      Needs the nightly cron job described in the plugin README.
+    </em>
+  </p>
+  <p>
+    <label for="settings_auto_lock_months_back">Lock up to</label>
+    <%= select_tag 'settings[auto_lock_months_back]',
+          options_for_select(
+            (1..RestrictAutoLock::MAX_MONTHS_BACK).map {|n|
+              [n == 1 ? 'Last day of last month' : "Last day of #{n} months ago", n.to_s]
+            },
+            (settings['auto_lock_months_back'].presence || '1').to_s) %>
+  </p>
+  <p>
+    <label for="settings_auto_lock_after_day">After day of the month</label>
+    <%= number_field_tag 'settings[auto_lock_after_day]',
+          (settings['auto_lock_after_day'].presence || '0').to_s,
+          min: RestrictAutoLock::MIN_DAY, max: RestrictAutoLock::MAX_DAY, step: 1 %>
+    <em class="info">
+      Days of the new month to wait before locking the period that just ended
+      (0 = lock from the 1st). Example: with 5 and "Last day of last month", the
+      lock moves to 31 October on 6 November. Until then 30 September stays locked.
+    </em>
   </p>
 </fieldset>
