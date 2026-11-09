@@ -8,17 +8,19 @@ class RestrictMailer < ActionMailer::Base
   include Redmine::I18n
   include Roadie::Rails::Automatic
 
-	def self.deliver_settings_changes(user, value, value_was)
-  	send_settings_changes(user, value, value_was)
-	end
+  # changed_by is the name shown as having made the change (a user's name,
+  # or a label such as "Automatic nightly lock")
+  def self.deliver_settings_changes(changed_by, value, value_was)
+    send_settings_changes(changed_by, value, value_was)
+  end
 
-  def send_settings_changes(user, value, value_was)
-    @user = user
+  def send_settings_changes(changed_by, value, value_was)
+    @changed_by = changed_by
     @value = value
     @value_was = value_was
     to = User.active.where(admin: 1).map(&:mail).flatten.compact.uniq
     mail :to => to,
-      :subject => "Lock Date for Time Log changed by #{user.name}"
+      :subject => "Lock Date for Time Log changed by #{changed_by}"
   end
 
   def self.default_url_options
